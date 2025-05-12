@@ -145,28 +145,55 @@ KAFKA_BROKERS=kafka:9092
 
 ## 📘 API Documentation
 
-### Endpoints REST
+---
 
-#### Users
-- `POST /api/auth/register` - Inscription
-- `POST /api/auth/login` - Connexion
-- `GET /api/users/profile` - Profil utilisateur
-- `PUT /api/users/preferences` - Mise à jour des préférences
-  ![register](https://github.com/user-attachments/assets/0e888a89-7105-49fd-9e08-4ccdc270bc5d)
+### 🧑‍💼 Endpoints REST - Utilisateurs
 
-![login](https://github.com/user-attachments/assets/e8ed508f-154a-4260-b4dc-d6e04c1dde54)
+- `POST /api/auth/register` - Inscription  
+  <img src="https://github.com/user-attachments/assets/0e888a89-7105-49fd-9e08-4ccdc270bc5d" alt="register" width="400"/>
 
-  
+- `POST /api/auth/login` - Connexion  
+  <img src="https://github.com/user-attachments/assets/e8ed508f-154a-4260-b4dc-d6e04c1dde54" alt="login" width="400"/>
 
-#### Movies
-- `GET /api/movies` - Liste des films
-- `GET /api/movies/:id` - Détails d'un film
-- `POST /api/movies` - Ajout d'un film (Admin)
-- `PUT /api/movies/:id` - Modification d'un film (Admin)
+- `GET /api/users/profile` - Profil utilisateur  
+- `PUT /api/users/preferences` - Mise à jour des préférences  
 
-#### Recommendations
-- `GET /api/recommendations` - Recommandations personnalisées
-- `GET /api/recommendations/trending` - Films tendance
+---
+
+### 🎬 Endpoints REST - Films
+
+- `GET /api/movies` - Liste des films  
+- `GET /api/movies/:id` - Détails d'un film  
+- `POST /api/movies` - Ajout d'un film (Admin)  
+- `PUT /api/movies/:id` - Modification d'un film (Admin)  
+
+---
+
+### 🤖 Endpoints gRPC
+
+- User Service (port `50053`) - Gestion des événements utilisateur  
+- Movie Service (port `50051`) - Gestion du catalogue  
+- Recommendation Service (port `50052`) - Calcul des recommandations  
+
+---
+
+### 📡 GraphQL
+
+Disponible à l’URL : `/graphql`  
+<img src="https://github.com/user-attachments/assets/<TON-ID-IMAGE-GRAPHQL>.png" alt="GraphQL UI" width="400"/>
+
+#### 🔐 Connexion via GraphQL
+
+```graphql
+mutation {
+  login(input: { email: "user@example.com", password: "password123" }) {
+    accessToken
+    user {
+      id
+      email
+    }
+  }
+}
 
 ### Endpoints gRPC
 - User Service (50053) - Gestion des événements utilisateur
