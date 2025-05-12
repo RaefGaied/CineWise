@@ -39,7 +39,7 @@
 
 ### Structure des Dossiers
 
-```plaintext
+
 cinewise-backend/
 ├── gateway/                  # Service API Gateway (GraphQL + REST)
 ├── user-service/            # Gestion des utilisateurs et authentification
