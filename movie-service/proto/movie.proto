@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package movie;
+
+service MovieService {
+  rpc GetMovie(GetMovieRequest) returns (Movie) {}
+  rpc ListMovies(ListMoviesRequest) returns (ListMoviesResponse) {}
+  rpc CreateMovie(CreateMovieRequest) returns (Movie) {}
+  rpc UpdateMovie(UpdateMovieRequest) returns (Movie) {}
+  rpc DeleteMovie(DeleteMovieRequest) returns (DeleteMovieResponse) {}
+  rpc ProcessMovieEvent(stream MovieEvent) returns (stream MovieEventResponse) {}
+}
+
+message GetMovieRequest {
+  string id = 1;
+}
+
+message ListMoviesRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message ListMoviesResponse {
+  repeated Movie movies = 1;
+  int32 total = 2;
+}
+
+message CreateMovieRequest {
+  string title = 1;
+  string genre = 2;
+  string summary = 3;
+  double rating = 4;
+  int32 releaseYear = 5;
+  string posterUrl = 6;
+}
+
+message UpdateMovieRequest {
+  string id = 1;
+  string title = 2;
+  string genre = 3;
+  string summary = 4;
+  double rating = 5;
+  int32 releaseYear = 6;
+  string posterUrl = 7;
+}
+
+message DeleteMovieRequest {
+  string id = 1;
+}
+
+message DeleteMovieResponse {
+  bool success = 1;
+}
+
+message Movie {
+  string id = 1;
+  string title = 2;
+  string genre = 3;
+  string summary = 4;
+  double rating = 5;
+  int32 releaseYear = 6;
+  string posterUrl = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message MovieEvent {
+  string event_type = 1; // CREATED, UPDATED, DELETED
+  Movie movie = 2;
+  string timestamp = 3;
+}
+
+message MovieEventResponse {
+  bool success = 1;
+  string message_id = 2;
+}

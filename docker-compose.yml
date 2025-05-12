@@ -1,0 +1,193 @@
+version: '3.8'
+
+services:
+  gateway:
+    build: 
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: cinewise-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - USER_SERVICE_URL=http://user-service:3003
+      - MOVIE_SERVICE_URL=http://movie-service:3001
+      - RECOMMENDATION_SERVICE_URL=http://recommendation-service:3002
+    depends_on:
+      - user-service
+      - movie-service
+      - recommendation-service
+    networks:
+      - cinewise-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: cinewise-user-service
+    ports:
+      - "3003:3003"
+      - "50053:50053"
+    environment:
+      - MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/cinewise-users?authSource=admin
+      - JWT_SECRET=your_jwt_secret_key
+      - JWT_EXPIRES_IN=24h
+      - KAFKA_BROKER=kafka:9092
+      - KAFKAJS_NO_PARTITIONER_WARNING=1
+    depends_on:
+      kafka:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    networks:
+      - cinewise-network
+    restart: unless-stopped
+
+  movie-service:
+    build:
+      context: ./movie-service
+      dockerfile: Dockerfile
+    container_name: cinewise-movie-service
+    ports:
+      - "3001:3001"
+      - "50051:50051"    # Add this line to expose the gRPC port
+    environment:
+      - MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/cinewise-movies?authSource=admin
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKAJS_NO_PARTITIONER_WARNING=1
+    depends_on:
+      kafka:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    networks:
+      - cinewise-network
+    restart: unless-stopped
+
+  recommendation-service:
+    build:
+      context: ./recommendation-service
+      dockerfile: Dockerfile
+    container_name: cinewise-recommendation-service
+    ports:
+      - "3002:3002"
+      - "50052:50052"
+    environment:
+      - MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/cinewise-recommendations?authSource=admin
+      - MOVIE_SERVICE_URL=http://movie-service:3001
+      - KAFKA_BROKERS=kafka:9092
+    depends_on:
+      - mongodb
+      - kafka
+      - movie-service
+    networks:
+      - cinewise-network
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:latest
+    container_name: cinewise-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=adminpassword
+    networks:
+      - cinewise-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: cinewise-kafka
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS=5000
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    networks:
+      - cinewise-network
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: cinewise-zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ZOOKEEPER_INIT_LIMIT=5
+      - ZOOKEEPER_SYNC_LIMIT=2
+    networks:
+      - cinewise-network
+    healthcheck:
+      test: echo stat | nc localhost 2181
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: cinewise-mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=adminpassword
+      - ME_CONFIG_MONGODB_URL=mongodb://admin:adminpassword@mongodb:27017/?authSource=admin
+      - ME_CONFIG_BASICAUTH_USERNAME=cinewise_admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=raef123/*
+      - ME_CONFIG_SITE_BASEURL=/mongo-express/
+      - ME_CONFIG_SITE_COOKIESECRET=cookiesecret
+      - ME_CONFIG_SITE_SESSIONSECRET=sessionsecret
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - cinewise-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+    name: cinewise-mongodb-data
+  mongodb_config:
+    name: cinewise-mongodb-config
+
+networks:
+  cinewise-network:
+    name: cinewise-network
+    driver: bridge

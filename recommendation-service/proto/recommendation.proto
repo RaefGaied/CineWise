@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package recommendation;
+
+
+service RecommendationService {
+ 
+  rpc GetPopularRecommendations (PopularRecommendationsRequest) returns (PopularRecommendationsResponse);
+  
+  
+  rpc GetRecommendations(GetRecommendationsRequest) returns (GetRecommendationsResponse);
+
+  rpc ProcessUserEvent(stream UserEvent) returns (stream RecommendationEventAck);
+}
+
+message PopularRecommendationsRequest {
+  int32 limit = 1;
+}
+
+message PopularRecommendationsResponse {
+  repeated MovieRecommendation recommendations = 1;
+}
+
+message MovieRecommendation {
+  string id = 1;
+  string title = 2;
+  string genre = 3;
+  float rating = 4;
+  int32 releaseYear = 5;
+  string posterUrl = 6;
+}
+
+// ======================
+// ==== Messages de base ====
+// ======================
+
+message RecommendedMovie {
+  string movie_id = 1;
+  float score = 2; 
+}
+
+message Recommendation {
+  string user_id = 1;
+  repeated RecommendedMovie movies = 2; 
+  string generated_at = 3;
+  string algorithm = 4; 
+}
+
+// =============================
+// ==== Requêtes de service ====
+// =============================
+
+message GetRecommendationsRequest {
+  string user_id = 1;
+}
+
+message GetRecommendationsResponse {
+  Recommendation recommendation = 1;
+  string error_message = 2; 
+}
+
+// ================================
+// ==== Événements (stream Kafka) ====
+// ================================
+
+message UserEvent {
+  string event_type = 1;
+  string user_id = 2;
+  string movie_id = 3;
+  string timestamp = 4;
+  float rating = 5; 
+  int32 watch_duration = 6;
+}
+
+message RecommendationEventAck {
+  bool success = 1;
+  string message_id = 2;
+}

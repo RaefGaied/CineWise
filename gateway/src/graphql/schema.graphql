@@ -1,0 +1,233 @@
+type Query {
+  # Movie queries
+  movies(page: Int, limit: Int): MovieConnection!
+  movie(id: ID!): Movie
+  searchMovies(query: String!): [Movie!]!
+
+  # User queries
+  me: User
+  user(id: ID!): User
+  users(page: Int, limit: Int): UserConnection!
+  searchUsers(query: String!): [User!]!
+
+  # Recommendation queries
+  recommendations(userId: ID, limit: Int): [Movie!]!
+  userRecommendations(userId: ID, limit: Int): [Movie!]!
+  popularRecommendations(limit: Int): [MovieRecommendation]!
+  recommendationsByGenre(genre: String!, limit: Int): [Movie!]!
+  similarMovies(movieId: ID!, limit: Int): [Movie!]!
+  topRated(genre: String, limit: Int): [Movie!]!
+
+}
+
+type Mutation {
+  # Movie mutations
+  createMovie(input: CreateMovieInput!): Movie!
+  updateMovie(id: ID!, input: UpdateMovieInput!): Movie!
+  deleteMovie(id: ID!): Boolean!
+
+  # User mutations
+  register(input: RegisterInput!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  updateProfile(input: UpdateProfileInput!): User!
+  updatePreferences(input: UpdatePreferencesInput!): User!
+
+  # Movie interaction mutations
+  rateMovie(movieId: ID!, rating: Float!): Rating!
+  addToWatchlist(movieId: ID!): Boolean!
+  removeFromWatchlist(movieId: ID!): Boolean!
+  markAsWatched(movieId: ID!, watchDuration: Int): WatchedMovieResponse!
+}
+
+type Subscription {
+  # Real-time updates
+  movieAdded: Movie!
+  movieUpdated: Movie!
+  newRecommendation(userId: ID!): Movie!
+  userActivityUpdated(userId: ID!): UserActivity!
+}
+
+type Movie {
+  id: ID!
+  title: String!
+  genres: [String!]!
+  summary: String!
+  director: String!
+  rating: Float!
+  releaseYear: Int!
+  posterUrl: String
+  duration: Int
+  averageRating: Float
+  ratings: [Rating!]!
+  recommendations: [Movie!]!
+  similarMovies: [Movie!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+
+type MovieConnection {
+  edges: [Movie!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+# User types
+type User {
+  id: ID!
+  email: String!
+  username: String!
+  role: UserRole!
+  preferences: UserPreferences!
+  watchlist: [Movie!]!
+  watchedMovies: [WatchedMovie!]!  # Changed from [Movie!]! to [WatchedMovie!]!
+  ratings: [Rating!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+# Add the WatchedMovie type definition
+type WatchedMovie {
+  movie: Movie!
+  watchDuration: Int
+  watchedAt: String!
+  completionPercentage: Float
+}
+
+# Update the mutation response type
+type WatchedMovieResponse {
+  success: Boolean!
+  movie: Movie!
+  watchDuration: Int
+  watchedAt: String!
+}
+
+type UserConnection {
+  edges: [User!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type UserPreferences {
+  favoriteGenres: [String!]!
+  preferredLanguages: [String!]!
+  contentRating: [String!]!
+}
+
+type Rating {
+  id: ID!
+  user: User!
+  movie: Movie!
+  value: Float!
+  comment: String
+  createdAt: String!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type UserActivity {
+  id: ID!
+  user: User!
+  activityType: ActivityType!
+  movie: Movie
+  rating: Float
+  watchDuration: Int
+  timestamp: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  currentPage: Int!
+  totalPages: Int!
+}
+
+# Input types
+input CreateMovieInput {
+  title: String!
+  genre: String!
+  summary: String!
+  rating: Float!
+  releaseYear: Int!
+  posterUrl: String
+}
+
+input UpdateMovieInput {
+  title: String
+  genre: String
+  summary: String
+  rating: Float
+  releaseYear: Int
+  posterUrl: String
+}
+
+input RegisterInput {
+  email: String!
+  username: String!
+  password: String!
+}
+
+input UpdateProfileInput {
+  username: String
+  email: String
+  currentPassword: String
+  newPassword: String
+}
+
+input UpdatePreferencesInput {
+  favoriteGenres: [String!]!
+  preferredLanguages: [String!]!
+  contentRating: [String!]!
+}
+
+# Enums
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum ActivityType {
+  WATCHED
+  RATED
+  ADDED_TO_WATCHLIST
+  REMOVED_FROM_WATCHLIST
+  UPDATED_PREFERENCES
+}
+
+type MovieRecommendation {
+  id: ID!
+  title: String!
+  genre: String!
+  rating: Float!
+  releaseYear: Int!
+  posterUrl: String
+}
+
+# New type to provide more detailed response for watched movies
+type WatchedMovieResponse {
+  success: Boolean!
+  movie: Movie!
+  watchDuration: Int
+  watchedAt: String!
+}
+
+# Update Movie type to include duration
+#type Movie {
+ # id: ID!
+  #title: String!
+  #genre: String!
+  #summary: String!
+  #rating: Float!
+  #releaseYear: Int!
+  #posterUrl: String
+  #duration: Int
+  #averageRating: Float
+  #ratings: [Rating!]!
+  #recommendations: [Movie!]!
+  #similarMovies: [Movie!]!
+  #createdAt: String!
+  #updatedAt: String!
+#}*/
