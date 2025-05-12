@@ -45,7 +45,10 @@ cinewise-backend/
 ├── database/                # Scripts & configuration MongoDB
 ├── kafka/                   # Configuration Kafka et topics
 └── docker-compose.yml       # Orchestration des services
-![Uploading mermaid-diagram-2025-05-12-033158.png…]()
+
+
+##![Uploading mermaid-diagram-2025-05-12-033158.png…]()
+
 
 
 ## Services
