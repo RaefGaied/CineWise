@@ -33,39 +33,55 @@
 ---
 
 ## 🏗️ Architecture
-![mermaid-diagram-2025-05-12-033158](https://github.com/user-attachments/assets/d02afb13-e7b5-4db1-a21a-5c4b13c73d36)
 
-## Flux de Communication
+[mermaid-diagram-2025-05-12-033158](https://github.com/user-attachments/assets/d02afb13-e7b5-4db1-a21a-5c4b13c73d36)
+---
+
+## 🔄 Flux de Communication
+
 L'architecture de CineWise implémente plusieurs niveaux de communication entre ses composants :
 
-### 1. Communication Client-Gateway
-- HTTP/1.1 :
-  - Les clients Web/Mobile communiquent avec la Gateway via HTTP/1.1
-  - Deux points d'entrée principaux : REST API et GraphQL
-  - Le Reverse Proxy gère le routage des requêtes
-### 2. Communication Inter-Services (gRPC)
-- Gateway → Services :
-  - La Gateway communique avec les microservices via gRPC
-  - Ports gRPC dédiés :
-    - User Service : 50053
-    - Movie Service : 50051
-    - Recommendation Service : 50052
-  - Avantages : Performance élevée, contrats stricts avec Protocol Buffers
-### 3. Communication Événementielle (Kafka)
-- Publication/Souscription :
-  - Les services publient des événements sur Kafka
-  - Exemples d'événements :
-    - Nouveaux films ajoutés
-    - Actions utilisateur
-    - Mises à jour des recommandations
-  - Communication asynchrone pour le découplage des services
-### 4. Persistance des Données
-- Services → MongoDB :
-  - Chaque service dispose de sa propre base de données
+---
+
+### 1. 📡 Communication Client-Gateway
+- **HTTP/1.1** :
+  - Les clients Web/Mobile communiquent avec la Gateway via HTTP/1.1  
+  - Deux points d'entrée principaux : REST API et GraphQL  
+  - Le Reverse Proxy gère le routage des requêtes  
+
+---
+
+### 2. 🔁 Communication Inter-Services (gRPC)
+- **Gateway → Services** :
+  - La Gateway communique avec les microservices via gRPC  
+  - **Ports gRPC dédiés** :
+    - User Service : `50053`  
+    - Movie Service : `50051`  
+    - Recommendation Service : `50052`  
+  - **Avantages** : Performance élevée, contrats stricts avec Protocol Buffers  
+
+<img src="https://github.com/user-attachments/assets/d9f392cf-4553-4b7c-9fb9-d6044fb25122" alt="Gateway vers Movies" width="500"/>
+
+---
+
+### 3. 📬 Communication Événementielle (Kafka)
+- **Publication/Souscription** :
+  - Les services publient des événements sur Kafka  
+  - **Exemples d'événements** :
+    - Nouveaux films ajoutés  
+    - Actions utilisateur  
+    - Mises à jour des recommandations  
+  - Communication asynchrone pour le découplage des services  
+
+---
+
+### 4. 🗄️ Persistance des Données
+- **Services → MongoDB** :
+  - Chaque service dispose de sa propre base de données  
   - Isolation des données par domaine :
-    - Users DB : Données utilisateurs
-    - Movies DB : Catalogue de films
-    - Recommendations DB : Données de recommandation
+    - **Users DB** : Données utilisateurs  
+    - **Movies DB** : Catalogue de films  
+    - **Recommendations DB** : Données de recommandation  
 
 
 
@@ -77,12 +93,18 @@ L'architecture de CineWise implémente plusieurs niveaux de communication entre 
 - Gestion de l'authentification
 - Routage des requêtes
 - Interface GraphQL
+  <img src="https://github.com/user-attachments/assets/a84f5501-7755-4487-8bbb-f5e28afe3c19" alt="GraphQL Interface" width="400"/>
+
+  
 
 ### 👤 User Service (Port 3003)
 - Gestion des comptes utilisateurs
 - Authentification JWT
 - Historique de visionnage
 - Communication gRPC (Port 50053)
+  <img src="https://github.com/user-attachments/assets/39088aae-e7dc-426c-ba2f-f8ecb17337e9" alt="Emit User Event" width="400"/>
+
+
 
 ### 🎞️ Movie Service (Port 3001)
 - Gestion du catalogue de films
@@ -93,6 +115,9 @@ L'architecture de CineWise implémente plusieurs niveaux de communication entre 
 - Génération de recommandations
 - Analyse des préférences
 - Communication gRPC (Port 50052)
+ <img src="https://github.com/user-attachments/assets/3aab5be8-ecbc-4672-90d4-40b3599641b7" alt="Process Movie Event" width="400"/>
+
+
 
 ## 🛠️ Technologies
 - **Backend**: Node.js, Express
@@ -162,25 +187,27 @@ KAFKA_BROKERS=kafka:9092
 
 ### 🎬 Endpoints REST - Films
 
-- `GET /api/movies` - Liste des films  
-- `GET /api/movies/:id` - Détails d'un film  
-- `POST /api/movies` - Ajout d'un film (Admin)  
-- `PUT /api/movies/:id` - Modification d'un film (Admin)  
+- `GET /api/movies` – Liste des films  
+- `GET /api/movies/:id` – Détails d'un film  
+- `POST /api/movies` – Ajout d'un film (Admin)  
+  <br/>
+  <img src="https://github.com/user-attachments/assets/d550dbcc-cda9-4e01-8d55-ad5b3ca7d703" alt="POST Movie" width="500"/>
+
+- `PUT /api/movies/:id` – Modification d'un film (Admin)  
 
 ---
 
 ### 🤖 Endpoints gRPC
 
-- User Service (port `50053`) - Gestion des événements utilisateur  
-- Movie Service (port `50051`) - Gestion du catalogue  
-- Recommendation Service (port `50052`) - Calcul des recommandations  
+- **User Service** (port `50053`) – Gestion des événements utilisateur  
+- **Movie Service** (port `50051`) – Gestion du catalogue  
+- **Recommendation Service** (port `50052`) – Calcul des recommandations
 
 ---
 
 ### 📡 GraphQL
 
 Disponible à l’URL : `http://localhost:3000/graphql`  
-![Screenshot 2025-05-12 040558](https://github.com/user-attachments/assets/27e62764-1a48-4ef9-bd70-94d2c56076cb)
 
 <img src="https://github.com/user-attachments/assets/27e62764-1a48-4ef9-bd70-94d2c56076cb" alt="GraphQL UI" width="400"/>
 
@@ -197,12 +224,23 @@ mutation {
   }
 }
 
-### Endpoints gRPC
-- User Service (50053) - Gestion des événements utilisateur
-- Movie Service (50051) - Gestion du catalogue
-- Recommendation Service (50052) - Calcul des recommandations
+### 🛰️ Endpoints gRPC
+
+- **User Service** (`50053`) – Gestion des événements utilisateur  
+- **Movie Service** (`50051`) – Gestion du catalogue  
+  <br/>
+  <strong>Exemple d'appel gRPC pour Movie :</strong><br/>
+  <img src="https://github.com/user-attachments/assets/8b8eb361-b150-4bce-9bbe-ebd491a09072" alt="gRPC Movie Example" width="500"/>
+
+- **Recommendation Service** (`50052`) – Calcul des recommandations  
+
+---
 
 ## 🧪 Tests
+
+Tests automatisés pour les endpoints sécurisés (authentification requise avant création de film) :
+
+<img src="https://github.com/user-attachments/assets/bf063b92-b9c8-4c18-9e2a-051067590517" alt="Test Auth Movie" width="500"/>
 
 ## Sécurité
 - Authentification JWT
