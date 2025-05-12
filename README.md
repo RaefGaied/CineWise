@@ -33,8 +33,9 @@
 ---
 
 ## 🏗️ Architecture
-<img src="https://github.com/user-attachments/assets/d02afb13-e7b5-4db1-a21a-5c4b13c73d36" alt="Architecture Diagram" width="600"/>
----
+
+![mermaid-diagram-2025-05-12-033158](https://github.com/user-attachments/assets/a5b473b6-eae7-4a39-900b-b0d7854a0259)
+
 
 ## 🔄 Flux de Communication
 
