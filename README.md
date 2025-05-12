@@ -274,12 +274,15 @@ Tests automatisés pour les endpoints sécurisés (authentification requise avan
 ## 🚀 Déploiement
 Le projet utilise Docker et Docker Compose pour le déploiement :
 
-bash
+```bash
 # Production
-docker-compose -f docker-compose.yml up -d
+docker-compose -f
+docker-compose.yml up -d
 
 # Développement
-docker-compose -f docker-compose.dev.yml up
+docker-compose -f
+docker-compose.dev.yml up
+```
 
 
 ### 📈 Monitoring
