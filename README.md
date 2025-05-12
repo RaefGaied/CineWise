@@ -158,8 +158,3 @@ docker-compose -f docker-compose.dev.yml up
 - Communication asynchrone via Kafka
 - Architecture permettant le scaling horizontal
 
----
-
-Pour plus d'informations, consultez la documentation spécifique de chaque service dans leurs répertoires respectifs.
-
-        Too many current requests. Your queue position is 1. Please wait for a while or switch to other models for a smoother experience.
