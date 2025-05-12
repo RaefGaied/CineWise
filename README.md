@@ -179,12 +179,14 @@ KAFKA_BROKERS=kafka:9092
 
 ### 📡 GraphQL
 
-Disponible à l’URL : `/graphql`  
-<img src="https://github.com/user-attachments/assets/<TON-ID-IMAGE-GRAPHQL>.png" alt="GraphQL UI" width="400"/>
+Disponible à l’URL : `http://localhost:3000/graphql`  
+![Screenshot 2025-05-12 040558](https://github.com/user-attachments/assets/27e62764-1a48-4ef9-bd70-94d2c56076cb)
+
+<img src="https://github.com/user-attachments/assets/27e62764-1a48-4ef9-bd70-94d2c56076cb" alt="GraphQL UI" width="400"/>
 
 #### 🔐 Connexion via GraphQL
 
-```graphql
+graphql
 mutation {
   login(input: { email: "user@example.com", password: "password123" }) {
     accessToken
