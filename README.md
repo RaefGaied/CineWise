@@ -4,10 +4,9 @@
 
 <h1 align="center">🎬 CineWise - Plateforme de Recommandation de Films</h1>
 
-
 ## 📚 Table des Matières
 
-1. [Vue d'ensemble](#vue-densemble)
+1. [Vue d'ensemble](#-vue-densemble)
 2. [Architecture](#architecture)
 3. [Services](#services)
 4. [Technologies](#technologies)
@@ -18,7 +17,6 @@
 9. [Déploiement](#déploiement)
 10. [Contribution](#contribution)
 11. [Licence](#licence)
-
 
 ---
 
@@ -61,9 +59,9 @@ L'architecture de CineWise implémente plusieurs niveaux de communication entre 
 - **Gateway → Services** :
   - La Gateway communique avec les microservices via gRPC  
   - **Ports gRPC dédiés** :
-    - User Service : `50053`  
-    - Movie Service : `50051`  
-    - Recommendation Service : `50052`  
+    - User Service : 50053  
+    - Movie Service : 50051  
+    - Recommendation Service : 50052  
   - **Avantages** : Performance élevée, contrats stricts avec Protocol Buffers  
 
 <img src="https://github.com/user-attachments/assets/d9f392cf-4553-4b7c-9fb9-d6044fb25122" alt="Gateway vers Movies" width="500"/>
@@ -135,7 +133,7 @@ L'architecture de CineWise implémente plusieurs niveaux de communication entre 
 
 ## ⚙️ Installation
 
-```bash
+bash
 # Cloner le repository
 git clone https://github.com/votre-username/cinewise.git
 
@@ -145,14 +143,14 @@ npm install
 
 # Lancer les services
 docker-compose up -d
-```
+
 
 ## 🔧 Configuration
 
 ### Variables d'Environnement
 Chaque service nécessite ses propres variables d'environnement :
 
-```env
+env
 # Gateway Service
 NODE_ENV=production
 USER_SERVICE_URL=http://user-service:3003
@@ -172,7 +170,7 @@ KAFKA_BROKERS=kafka:9092
 MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/cinewise-recommendations
 MOVIE_SERVICE_URL=http://movie-service:3001
 KAFKA_BROKERS=kafka:9092
-```
+
 
 ## 📘 API Documentation
 
@@ -180,40 +178,40 @@ KAFKA_BROKERS=kafka:9092
 
 ### 🧑‍💼 Endpoints REST - Utilisateurs
 
-- `POST /api/auth/register` - Inscription  
+- POST /api/auth/register - Inscription  
   <img src="https://github.com/user-attachments/assets/0e888a89-7105-49fd-9e08-4ccdc270bc5d" alt="register" width="400"/>
 
-- `POST /api/auth/login` - Connexion  
+- POST /api/auth/login - Connexion  
   <img src="https://github.com/user-attachments/assets/e8ed508f-154a-4260-b4dc-d6e04c1dde54" alt="login" width="400"/>
 
-- `GET /api/users/profile` - Profil utilisateur  
-- `PUT /api/users/preferences` - Mise à jour des préférences  
+- GET /api/users/profile - Profil utilisateur  
+- PUT /api/users/preferences - Mise à jour des préférences  
 
 ---
 
 ### 🎬 Endpoints REST - Films
 
-- `GET /api/movies` – Liste des films  
-- `GET /api/movies/:id` – Détails d'un film  
-- `POST /api/movies` – Ajout d'un film (Admin)  
+- GET /api/movies – Liste des films  
+- GET /api/movies/:id – Détails d'un film  
+- POST /api/movies – Ajout d'un film (Admin)  
   <br/>
   <img src="https://github.com/user-attachments/assets/d550dbcc-cda9-4e01-8d55-ad5b3ca7d703" alt="POST Movie" width="500"/>
 
-- `PUT /api/movies/:id` – Modification d'un film (Admin)  
+- PUT /api/movies/:id – Modification d'un film (Admin)  
 
 ---
 
 ### 🤖 Endpoints gRPC
 
-- **User Service** (port `50053`) – Gestion des événements utilisateur  
-- **Movie Service** (port `50051`) – Gestion du catalogue  
-- **Recommendation Service** (port `50052`) – Calcul des recommandations
+- **User Service** (port 50053) – Gestion des événements utilisateur  
+- **Movie Service** (port 50051) – Gestion du catalogue  
+- **Recommendation Service** (port 50052) – Calcul des recommandations
 
 ---
 
 ### 📡 GraphQL
 
-Disponible à l’URL : `http://localhost:3000/graphql`  
+Disponible à l’URL : http://localhost:3000/graphql  
 
 <img src="https://github.com/user-attachments/assets/27e62764-1a48-4ef9-bd70-94d2c56076cb" alt="GraphQL UI" width="400"/>
 
@@ -232,13 +230,13 @@ mutation {
 
 ### 🛰️ Endpoints gRPC
 
-- **User Service** (`50053`) – Gestion des événements utilisateur  
-- **Movie Service** (`50051`) – Gestion du catalogue  
+- **User Service** (50053) – Gestion des événements utilisateur  
+- **Movie Service** (50051) – Gestion du catalogue  
   <br/>
   <strong>Exemple d'appel gRPC pour Movie :</strong><br/>
   <img src="https://github.com/user-attachments/assets/8b8eb361-b150-4bce-9bbe-ebd491a09072" alt="gRPC Movie Example" width="500"/>
 
-- **Recommendation Service** (`50052`) – Calcul des recommandations  
+- **Recommendation Service** (50052) – Calcul des recommandations  
 
 ---
 
@@ -258,13 +256,13 @@ Tests automatisés pour les endpoints sécurisés (authentification requise avan
 ## 🚀 Déploiement
 Le projet utilise Docker et Docker Compose pour le déploiement :
 
-```bash
+bash
 # Production
 docker-compose -f docker-compose.yml up -d
 
 # Développement
 docker-compose -f docker-compose.dev.yml up
-```
+
 
 ### 📈 Monitoring
 - Interface Mongo Express (Port 8081)
@@ -275,7 +273,5 @@ docker-compose -f docker-compose.dev.yml up
 - Services indépendants
 - Communication asynchrone via Kafka
 - Architecture permettant le scaling horizontal
-
-
       
 
