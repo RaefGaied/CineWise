@@ -5,20 +5,20 @@
 <h1 align="center">🎬 CineWise - Plateforme de Recommandation de Films</h1>
 
 
-
 ## 📚 Table des Matières
 
-1. [Vue d'ensemble](#-vue-densemble)
-2. [Architecture](#-architecture)
-3. [Services](#-services)
-4. [Technologies](#-technologies)
-5. [Installation](#-installation)
-6. [Configuration](#-configuration)
-7. [Documentation API](#-documentation-api)
-8. [Tests](#-tests)
-9. [Déploiement](#-déploiement)
-10. [Contribution](#-contribution)
-11. [Licence](#-licence)
+1. [Vue d'ensemble](#vue-densemble)
+2. [Architecture](#architecture)
+3. [Services](#services)
+4. [Technologies](#technologies)
+5. [Installation](#installation)
+6. [Configuration](#configuration)
+7. [Documentation API](#documentation-api)
+8. [Tests](#tests)
+9. [Déploiement](#déploiement)
+10. [Contribution](#contribution)
+11. [Licence](#licence)
+
 
 ---
 
