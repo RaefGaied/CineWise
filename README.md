@@ -1,4 +1,10 @@
-# 🎬 CineWise - Plateforme de Recommandation de Films
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a2591259-f7bd-4f8d-bd06-fe978e7bdfb5" alt="CineWise Logo" width="100"/>
+</p>
+
+<h1 align="center">🎬 CineWise - Plateforme de Recommandation de Films</h1>
+
+
 
 ## 📚 Table des Matières
 
@@ -272,3 +278,4 @@ docker-compose -f docker-compose.dev.yml up
 
 
       
+expld
