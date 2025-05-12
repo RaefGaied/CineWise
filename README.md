@@ -47,8 +47,8 @@ cinewise-backend/
 └── docker-compose.yml       # Orchestration des services
 
 
-![Architecture Diagram](![mermaid-diagram-2025-05-12-033158](https://github.com/user-attachments/assets/31eaf81a-353c-4e5b-9c13-053f150f1866)
-)
+![Architecture Diagram](https://github.com/user-attachments/assets/31eaf81a-353c-4e5b-9c13-053f150f1866)
+
 
 
 
