@@ -20,25 +20,6 @@ markdown
 
 ## 🏗️ Architecture
 
-```mermaid
-%%{init: {'theme': 'dark', 'fontFamily': 'Arial'}}%%
-flowchart TD
-    Client -->|"1. REST/GraphQL"| Gateway
-    Gateway -->|"2. gRPC"| UserService
-    Gateway -->|"3. gRPC"| MovieService
-    UserService -->|"4. Événements Kafka"| Kafka[(Kafka)]
-    MovieService -->|"5. Événements Kafka"| Kafka
-    Kafka -->|"6. Stream Processing"| RecService
-    RecService -->|"7. gRPC"| Gateway
-Structure des Dossiers
-cinewise-backend/
-├── gateway/           # GraphQL + REST (3000)
-├── user-service/      # gRPC (50053) + Kafka
-├── movie-service/     # gRPC (50051) + Kafka
-├── recommendation-service/ # ML + gRPC (50052)
-├── proto/             # Fichiers .proto
-├── kafka/             # Configuration Kafka
-└── docker-compose.yml # Orchestration
 🧩 Services
 🌐 API Gateway (Node.js/Express)
 Ports : 3000 (HTTP), 3001 (HTTPS)
