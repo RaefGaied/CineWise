@@ -135,7 +135,30 @@ L'architecture de CineWise implémente plusieurs niveaux de communication entre 
 
 bash
 # Cloner le repository
+git clone https://github.com/votre-user## 🛠️ Technologies
+
+- **Backend**: Node.js, Express  
+- **Base de données**: MongoDB  
+- **Message Broker**: Apache Kafka  
+- **Communication**: gRPC, REST, GraphQL  
+- **Conteneurisation**: Docker  
+- **Authentification**: JWT  
+
+---
+
+## ⚙️ Installation
+
+```bash
+# Cloner le repository
 git clone https://github.com/votre-username/cinewise.git
+
+# Installer les dépendances
+cd cinewise
+npm install
+
+# Lancer les services
+docker-compose up -d
+name/cinewise.git
 
 # Installer les dépendances
 cd cinewise
