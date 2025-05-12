@@ -1,159 +1,158 @@
-markdown
-# 🎬 CineWise - Plateforme de Recommandation de Films  
-**Microservices : REST, GraphQL, gRPC & Kafka**  
-*Dr. Salah Gontara - SOA & Microservices A.U. 2024-25*
+# CineWise - Plateforme de Recommandation de Films
 
----
+## Table des Matières
+1. [Vue d'ensemble](#vue-densemble)
+2. [Architecture](#architecture)
+3. [Services](#services)
+4. [Technologies](#technologies)
+5. [Installation](#installation)
+6. [Configuration](#configuration)
+7. [API Documentation](#api-documentation)
+8. [Tests](#tests)
+9. [Déploiement](#déploiement)
 
-## 📚 Table des Matières
-1. [Architecture](#architecture)  
-2. [Services](#services)  
-3. [Workflows](#workflows-clés)  
-4. [Technologies](#technologies)  
-5. [Installation](#installation)  
-6. [API Documentation](#api-documentation)  
-7. [Tests](#tests)  
-8. [Déploiement](#déploiement)  
-9. [Licence](#licence)
+## Vue d'ensemble
+CineWise est une plateforme moderne de recommandation de films utilisant une architecture microservices. Le système offre des recommandations personnalisées basées sur les préférences des utilisateurs et leur historique de visionnage.
 
----
+## Architecture
+L'application est construite sur une architecture microservices avec les composants suivants :
 
-## 🏗️ Architecture
+```
+cinewise-backend/
+├── gateway/           # Service de passerelle API
+├── user-service/      # Gestion des utilisateurs
+├── movie-service/     # Catalogue de films
+├── recommendation-service/ # Moteur de recommandation
+├── database/          # Configuration MongoDB
+├── kafka/            # Configuration Kafka
+└── docker-compose.yml # Configuration Docker
+```
 
-🧩 Services
-🌐 API Gateway (Node.js/Express)
-Ports : 3000 (HTTP), 3001 (HTTPS)
+## Services
 
-Fonctions :
+### Gateway Service (Port 3000)
+- Point d'entrée unique de l'application
+- Gestion de l'authentification
+- Routage des requêtes
+- Interface GraphQL
 
-Authentification JWT
+### User Service (Port 3003)
+- Gestion des comptes utilisateurs
+- Authentification JWT
+- Historique de visionnage
+- Communication gRPC (Port 50053)
 
-Agrégation GraphQL
+### Movie Service (Port 3001)
+- Gestion du catalogue de films
+- Recherche et filtrage
+- Communication gRPC (Port 50051)
 
-Cache Redis
+### Recommendation Service (Port 3002)
+- Génération de recommandations
+- Analyse des préférences
+- Communication gRPC (Port 50052)
 
-Rate limiting (100 req/min)
+## Technologies
+- **Backend**: Node.js, Express
+- **Base de données**: MongoDB
+- **Message Broker**: Apache Kafka
+- **Communication**: gRPC, REST, GraphQL
+- **Conteneurisation**: Docker
+- **Authentification**: JWT
 
-👤 User Service (TypeScript)
-Protobuf :
+## Installation
 
-proto
-service UserService {
-  rpc GetUser (UserRequest) returns (User);
-  rpc UpdatePreferences (PrefUpdate) returns (google.protobuf.Empty);
-}
-Topics Kafka :
+```bash
+# Cloner le repository
+git clone https://github.com/votre-username/cinewise.git
 
-user.registered
+# Installer les dépendances
+cd cinewise
+npm install
 
-user.preferences.updated
+# Lancer les services
+docker-compose up -d
+```
 
-🎬 Movie Service (TypeScript)
-Endpoints gRPC :
+## Configuration
 
-ListMovies(MovieFilter) returns (MovieList)
+### Variables d'Environnement
+Chaque service nécessite ses propres variables d'environnement :
 
-GetMovieDetails(MovieID) returns (MovieDetails)
+```env
+# Gateway Service
+NODE_ENV=production
+USER_SERVICE_URL=http://user-service:3003
+MOVIE_SERVICE_URL=http://movie-service:3001
+RECOMMENDATION_SERVICE_URL=http://recommendation-service:3002
 
-🤖 Recommendation Service (Python)
-Algorithmes :
+# User Service
+MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/cinewise-users
+JWT_SECRET=your_jwt_secret_key
+KAFKA_BROKER=kafka:9092
 
-Filtrage collaboratif
-
-Content-based filtering
-
-Entrées/Sorties :
-
-proto
-rpc ProcessUserEvent(stream UserEvent) returns (stream RecommendationAck);
-⚙️ Technologies
-Composant	Technologie
-API Gateway	Apollo GraphQL + Express
-Communication	gRPC (HTTP/2) + Protobuf
-Streaming	Apache Kafka
-Persistence	MongoDB + Redis
-Conteneurisation	Docker + Docker Compose
-Monitoring	Prometheus + Grafana
-🚀 Installation
-bash
-# Avec Docker
-docker-compose -f docker-compose.yml -f docker-compose.kafka.yml up -d
-
-# Vérification
-docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
-Variables critiques (.env):
-
-ini
-# Kafka
+# Movie Service
+MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/cinewise-movies
 KAFKA_BROKERS=kafka:9092
-KAFKA_GROUP_ID=user-activity-group
 
-# gRPC
-GRPC_VERBOSITY=DEBUG
-📡 API Documentation
-GraphQL (Gateway)
-graphql
-query GetRecommendations($userId: ID!) {
-  user(id: $userId) {
-    name
-    recommendations {
-      movie { title rating }
-    }
-  }
-}
-gRPC Endpoints
-Service	Méthode	Protobuf
-User Service	GetUserPreferences	user.proto
-Movie Service	ListMoviesByGenre	movie.proto
-🧪 Tests
-Test d'intégration Kafka :
+# Recommendation Service
+MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/cinewise-recommendations
+MOVIE_SERVICE_URL=http://movie-service:3001
+KAFKA_BROKERS=kafka:9092
+```
 
-typescript
-describe('Kafka Producer', () => {
-  it('should send user event to Kafka', async () => {
-    const result = await producer.send({
-      topic: 'user.activity',
-      messages: [{ value: JSON.stringify(testEvent) }]
-    });
-    expect(result).toHaveProperty('topicName', 'user.activity');
-  });
-});
-🛠️ Déploiement
-Topologie de production :
+## API Documentation
 
-bash
-# Scale des services
-docker-compose up -d --scale user-service=3 --scale movie-service=2
-Monitoring :
+### Endpoints REST
 
-Kafka UI : http://localhost:8080
+#### Users
+- `POST /api/auth/register` - Inscription
+- `POST /api/auth/login` - Connexion
+- `GET /api/users/profile` - Profil utilisateur
+- `PUT /api/users/preferences` - Mise à jour des préférences
 
-Grafana : http://localhost:3000
+#### Movies
+- `GET /api/movies` - Liste des films
+- `GET /api/movies/:id` - Détails d'un film
+- `POST /api/movies` - Ajout d'un film (Admin)
+- `PUT /api/movies/:id` - Modification d'un film (Admin)
 
-📜 Licence
-Distribué sous licence MIT. Voir LICENSE pour plus d'informations.
+#### Recommendations
+- `GET /api/recommendations` - Recommandations personnalisées
+- `GET /api/recommendations/trending` - Films tendance
 
-Note : Le dépôt GitHub inclut des exemples de requêtes Postman et des schémas Protobuf complets.
+### Endpoints gRPC
+- User Service (50053) - Gestion des événements utilisateur
+- Movie Service (50051) - Gestion du catalogue
+- Recommendation Service (50052) - Calcul des recommandations
+
+## Sécurité
+- Authentification JWT
+- Rate Limiting
+- Validation des données
+- CORS configuré
+- Réseau Docker isolé
+
+## Déploiement
+Le projet utilise Docker et Docker Compose pour le déploiement :
+
+```bash
+# Production
+docker-compose -f docker-compose.yml up -d
+
+# Développement
+docker-compose -f docker-compose.dev.yml up
+```
+
+### Monitoring
+- Interface Mongo Express (Port 8081)
+- Logs centralisés
+- Healthchecks pour chaque service
+
+### Scalabilité
+- Services indépendants
+- Communication asynchrone via Kafka
+- Architecture permettant le scaling horizontal
 
 
-### Points Forts de Cette Version :
-1. **Conformité au Cahier de Charges** :
-   - Toutes les architectures demandées (REST, GraphQL, gRPC, Kafka) sont clairement identifiées
-   - Documentation technique complète avec exemples de code
-
-2. **Améliorations Visuelles** :
-   - Diagrammes Mermaid interactifs
-   - Tableaux synthétiques pour les technologies
-   - Structure de fichiers explicite
-
-3. **Éléments Pratiques** :
-   - Commandes Docker prêtes à l'emploi
-   - Exemples de tests d'intégration
-   - Configuration de monitoring incluse
-
-4. **Pour l'Évaluation** :
-   - Section "Technologies" qui met en avant chaque composant demandé
-   - Workflows clairement expliqués
-   - Procédures de test détaillées
-
-Les fichiers complémentaires recommandés (`proto/`, `examples/`) permettent de satisfaire pleinement les exigences de documentation du projet.
+      
