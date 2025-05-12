@@ -35,51 +35,66 @@
 ## 🏗️ Architecture
 ![mermaid-diagram-2025-05-12-033158](https://github.com/user-attachments/assets/d02afb13-e7b5-4db1-a21a-5c4b13c73d36)
 
+## Flux de Communication
+L'architecture de CineWise implémente plusieurs niveaux de communication entre ses composants :
+
+### 1. Communication Client-Gateway
+- HTTP/1.1 :
+  - Les clients Web/Mobile communiquent avec la Gateway via HTTP/1.1
+  - Deux points d'entrée principaux : REST API et GraphQL
+  - Le Reverse Proxy gère le routage des requêtes
+### 2. Communication Inter-Services (gRPC)
+- Gateway → Services :
+  - La Gateway communique avec les microservices via gRPC
+  - Ports gRPC dédiés :
+    - User Service : 50053
+    - Movie Service : 50051
+    - Recommendation Service : 50052
+  - Avantages : Performance élevée, contrats stricts avec Protocol Buffers
+### 3. Communication Événementielle (Kafka)
+- Publication/Souscription :
+  - Les services publient des événements sur Kafka
+  - Exemples d'événements :
+    - Nouveaux films ajoutés
+    - Actions utilisateur
+    - Mises à jour des recommandations
+  - Communication asynchrone pour le découplage des services
+### 4. Persistance des Données
+- Services → MongoDB :
+  - Chaque service dispose de sa propre base de données
+  - Isolation des données par domaine :
+    - Users DB : Données utilisateurs
+    - Movies DB : Catalogue de films
+    - Recommendations DB : Données de recommandation
 
 
-### Structure des Dossiers
 
 
-cinewise-backend/
-├── gateway/                  # Service API Gateway (GraphQL + REST)
-├── user-service/            # Gestion des utilisateurs et authentification
-├── movie-service/           # Catalogue et gestion des films
-├── recommendation-service/  # Moteur de recommandation
-├── database/                # Scripts & configuration MongoDB
-├── kafka/                   # Configuration Kafka et topics
-└── docker-compose.yml       # Orchestration des services
+## 🧩 Services
 
-
-![Architecture Diagram](https://github.com/user-attachments/assets/31eaf81a-353c-4e5b-9c13-053f150f1866)
-
-
-
-
-## Services
-
-### Gateway Service (Port 3000)
+### 🌐 Gateway Service (Port 3000)
 - Point d'entrée unique de l'application
 - Gestion de l'authentification
 - Routage des requêtes
 - Interface GraphQL
 
-### User Service (Port 3003)
+### 👤 User Service (Port 3003)
 - Gestion des comptes utilisateurs
 - Authentification JWT
 - Historique de visionnage
 - Communication gRPC (Port 50053)
 
-### Movie Service (Port 3001)
+### 🎞️ Movie Service (Port 3001)
 - Gestion du catalogue de films
 - Recherche et filtrage
 - Communication gRPC (Port 50051)
 
-### Recommendation Service (Port 3002)
+### 🤖 Recommendation Service (Port 3002)
 - Génération de recommandations
 - Analyse des préférences
 - Communication gRPC (Port 50052)
 
-## Technologies
+## 🛠️ Technologies
 - **Backend**: Node.js, Express
 - **Base de données**: MongoDB
 - **Message Broker**: Apache Kafka
@@ -87,7 +102,7 @@ cinewise-backend/
 - **Conteneurisation**: Docker
 - **Authentification**: JWT
 
-## Installation
+## ⚙️ Installation
 
 ```bash
 # Cloner le repository
@@ -101,7 +116,7 @@ npm install
 docker-compose up -d
 ```
 
-## Configuration
+## 🔧 Configuration
 
 ### Variables d'Environnement
 Chaque service nécessite ses propres variables d'environnement :
@@ -128,7 +143,7 @@ MOVIE_SERVICE_URL=http://movie-service:3001
 KAFKA_BROKERS=kafka:9092
 ```
 
-## API Documentation
+## 📘 API Documentation
 
 ### Endpoints REST
 
@@ -137,6 +152,11 @@ KAFKA_BROKERS=kafka:9092
 - `POST /api/auth/login` - Connexion
 - `GET /api/users/profile` - Profil utilisateur
 - `PUT /api/users/preferences` - Mise à jour des préférences
+  ![register](https://github.com/user-attachments/assets/0e888a89-7105-49fd-9e08-4ccdc270bc5d)
+
+![login](https://github.com/user-attachments/assets/e8ed508f-154a-4260-b4dc-d6e04c1dde54)
+
+  
 
 #### Movies
 - `GET /api/movies` - Liste des films
@@ -153,6 +173,8 @@ KAFKA_BROKERS=kafka:9092
 - Movie Service (50051) - Gestion du catalogue
 - Recommendation Service (50052) - Calcul des recommandations
 
+## 🧪 Tests
+
 ## Sécurité
 - Authentification JWT
 - Rate Limiting
@@ -160,7 +182,7 @@ KAFKA_BROKERS=kafka:9092
 - CORS configuré
 - Réseau Docker isolé
 
-## Déploiement
+## 🚀 Déploiement
 Le projet utilise Docker et Docker Compose pour le déploiement :
 
 ```bash
@@ -171,12 +193,12 @@ docker-compose -f docker-compose.yml up -d
 docker-compose -f docker-compose.dev.yml up
 ```
 
-### Monitoring
+### 📈 Monitoring
 - Interface Mongo Express (Port 8081)
 - Logs centralisés
 - Healthchecks pour chaque service
 
-### Scalabilité
+### ⚖️ Scalabilité
 - Services indépendants
 - Communication asynchrone via Kafka
 - Architecture permettant le scaling horizontal
