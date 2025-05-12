@@ -145,35 +145,30 @@ git clone https://github.com/votre-user## 🛠️ Technologies
 - **Authentification**: JWT  
 
 ---
-
 ## ⚙️ Installation
 
 ```bash
 # Cloner le repository
 git clone https://github.com/votre-username/cinewise.git
 
-# Installer les dépendances
+# Aller dans le dossier du projet
 cd cinewise
-npm install
-
-# Lancer les services
-docker-compose up -d
-name/cinewise.git
 
 # Installer les dépendances
-cd cinewise
 npm install
 
-# Lancer les services
+# Lancer les services avec Docker
 docker-compose up -d
+```
 
 
 ## 🔧 Configuration
 
 ### Variables d'Environnement
-Chaque service nécessite ses propres variables d'environnement :
 
-env
+Chaque service nécessite ses propres variables d'environnement. Voici un exemple de fichier `.env` :
+
+```env
 # Gateway Service
 NODE_ENV=production
 USER_SERVICE_URL=http://user-service:3003
@@ -193,7 +188,7 @@ KAFKA_BROKERS=kafka:9092
 MONGODB_URI=mongodb://admin:adminpassword@mongodb:27017/cinewise-recommendations
 MOVIE_SERVICE_URL=http://movie-service:3001
 KAFKA_BROKERS=kafka:9092
-
+```
 
 ## 📘 API Documentation
 
