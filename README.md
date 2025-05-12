@@ -1,32 +1,52 @@
-# CineWise - Plateforme de Recommandation de Films
+# 🎬 CineWise - Plateforme de Recommandation de Films
 
-## Table des Matières
+## 📚 Table des Matières
+
 1. [Vue d'ensemble](#vue-densemble)
 2. [Architecture](#architecture)
 3. [Services](#services)
 4. [Technologies](#technologies)
 5. [Installation](#installation)
 6. [Configuration](#configuration)
-7. [API Documentation](#api-documentation)
+7. [Documentation API](#documentation-api)
 8. [Tests](#tests)
 9. [Déploiement](#déploiement)
+10. [Contribution](#contribution)
+11. [Licence](#licence)
 
-## Vue d'ensemble
-CineWise est une plateforme moderne de recommandation de films utilisant une architecture microservices. Le système offre des recommandations personnalisées basées sur les préférences des utilisateurs et leur historique de visionnage.
+---
 
-## Architecture
-L'application est construite sur une architecture microservices avec les composants suivants :
+## 🔍 Vue d'ensemble
 
-```
+**CineWise** est une plateforme intelligente de recommandation de films basée sur une architecture microservices. Elle offre des recommandations personnalisées en fonction des préférences utilisateurs, de leur historique de visionnage et des tendances actuelles. Grâce à des algorithmes avancés et un moteur de suggestion performant, CineWise garantit une expérience utilisateur fluide et pertinente.
+
+### 🎯 Fonctionnalités Clés
+
+- Recommandations personnalisées
+- Notation et commentaires de films
+- Gestion des préférences utilisateurs
+- Historique de visionnage
+- Suggestions basées sur les genres
+- API GraphQL flexible + REST complet
+- Interface intuitive pour les utilisateurs
+
+---
+
+## 🏗️ Architecture
+
+### Structure des Dossiers
+
+```plaintext
 cinewise-backend/
-├── gateway/           # Service de passerelle API
-├── user-service/      # Gestion des utilisateurs
-├── movie-service/     # Catalogue de films
-├── recommendation-service/ # Moteur de recommandation
-├── database/          # Configuration MongoDB
-├── kafka/            # Configuration Kafka
-└── docker-compose.yml # Configuration Docker
-```
+├── gateway/                  # Service API Gateway (GraphQL + REST)
+├── user-service/            # Gestion des utilisateurs et authentification
+├── movie-service/           # Catalogue et gestion des films
+├── recommendation-service/  # Moteur de recommandation
+├── database/                # Scripts & configuration MongoDB
+├── kafka/                   # Configuration Kafka et topics
+└── docker-compose.yml       # Orchestration des services
+![Uploading mermaid-diagram-2025-05-12-033158.png…]()
+
 
 ## Services
 
